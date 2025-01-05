@@ -7,6 +7,7 @@ import { AxiosRequestConfig } from "axios";
 import token from "../token/token";
 
 const requestHandler = (config: AxiosRequestConfig) => {
+  
   if (
     token.getToken(REFRESH_TOKEN_KEY) === undefined
   ) {

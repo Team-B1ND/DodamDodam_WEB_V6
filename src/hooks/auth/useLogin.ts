@@ -17,21 +17,24 @@ import { useRecoilValue } from "recoil";
 import { pointViewTypeAtom } from "@src/store/point/pointStore";
 import { PasswordParm } from "@src/types/login/login.type";
 import usePasswordCheck from "@src/util/check/passwordCheck";
+import { useEncryption } from "@src/util/encryption/useEncryption";
 
 const useLogin = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const type = useRecoilValue(pointViewTypeAtom);
+  const { saveEncryptedLoginInfo } = useEncryption();
   const { passwordType, handlePasswordView } = usePasswordCheck();
 
   const [loginData, setLoginData] = useState<Login>({
     id: "",
     pw: "",
   });
-  const [loginKeep, setLoginKeep] = useState<boolean>(false);
-
-  const handleLoginKeep = () => setLoginKeep((prev) => !prev);
-
+  const [loginKeep, setLoginKeep] = useState(false);
+  const handleLoginKeep = () => 
+  {
+    setLoginKeep((prev) => !prev);
+  }
 
   const handleLoginData = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -64,7 +67,9 @@ const useLogin = () => {
 
       try {
         const { data } = await authRepository.login(validLoginData);
-
+        if (loginKeep) {
+          await saveEncryptedLoginInfo(validLoginData);
+        }
         token.setToken(ACCESS_TOKEN_KEY, data.accessToken);
         token.setToken(REFRESH_TOKEN_KEY, data.refreshToken);
         showToast("로그인 성공", "SUCCESS");

@@ -6,7 +6,7 @@ import App from "./components/App";
 import ThemeProviderContainer from "./components/common/ThemeProviderContainer";
 import { B1ndToastContainer } from "@b1nd/b1nd-toastify";
 import { ToastContainer } from "react-toastify";
-
+import TokenCheck  from "./util/check/tokenCheck";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -21,10 +21,12 @@ function Root() {
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
           <ThemeProviderContainer>
+            <TokenCheck>
             <ToastContainer autoClose={5000} limit={9} />
             <BrowserRouter>
               <App />
             </BrowserRouter>
+            </TokenCheck>
           </ThemeProviderContainer>
         </RecoilRoot>
       </QueryClientProvider>
